@@ -2,6 +2,8 @@ import { ethers } from "hardhat";
 import {config} from 'dotenv';
 import {Wallet} from "ethers";
 import {Hub, Hub__factory, TestToken, TestToken__factory, Vault, Vault__factory} from "../typechain-types";
+import fs from "fs";
+import path from "path";
 config();
 
 // reference
@@ -53,6 +55,13 @@ async function main() {
   )
   await tx.wait(2)
   console.log(`TX HASH : ${tx.hash}\n`)
+
+  // save addresses
+  fs.writeFileSync(path.resolve(__dirname, "addresses.json"),JSON.stringify({
+    VAULT: vault.address,
+    TOKEN: testToken.address,
+    HUB: hub.address
+  }))
 }
 
 // We recommend this pattern to be able to use async/await everywhere

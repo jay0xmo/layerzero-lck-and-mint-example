@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "postinstall": "yarn build",
     "build": "forge build && hardhat compile",
     "test": "forge test --match-path 'test/*' -vv"
   },

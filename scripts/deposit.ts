@@ -2,19 +2,19 @@ import { ethers } from "hardhat";
 import {config} from 'dotenv';
 import {Wallet} from "ethers";
 import {Hub, TestToken, Vault} from "../typechain-types";
+import fs from "fs";
+import path from "path";
 config();
 
-const AVAX_CHAINID = 10106;
-const ARBI_CHAINID = 10143;
-
-// @notice
-// <= please set the addresses below.
-// how to get the addresses?
-// - just run deploy script
-// > yarn hardhat run ./scripts/deploy.ts
-const VAULT_ADDRESS = '0x45A60d56dba3f356d15E69e3a33eb315B99329B6';
-const TOKEN_ADDRESS = '0xAb1Fb7d540d76505F6c22c6F3a60FDdce8C93DAf';
-const HUB_ADDRESS = '0xa94b108478d93644DB5Acd862B65daE943e018Ea'
+let ADDRESS_BOOK;
+try {
+  ADDRESS_BOOK = JSON.parse(fs.readFileSync(path.resolve(__dirname, "addresses.json")).toString())
+} catch {
+  throw Error("deploy first!")
+}
+const VAULT_ADDRESS = ADDRESS_BOOK['VAULT'];
+const TOKEN_ADDRESS = ADDRESS_BOOK['TOKEN'];
+const HUB_ADDRESS = ADDRESS_BOOK['BOOK'];
 
 const amount = ethers.utils.parseEther('1.2');
 
@@ -58,7 +58,6 @@ async function main() {
   console.log(`DEPOSIT TX! tx hash : ${tx.hash}\n`);
 
   console.log('WAIT TO RECEIVE DEPOSIT EVENT FROM VAULT');
-
   await vault.on('Mint', async (to, amount) => {
     console.log(`${to} ADDRESS MINTED ${ethers.utils.formatEther(amount)}`)
     process.exit();

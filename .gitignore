@@ -12,3 +12,5 @@ artifacts
 out
 cache_forge
 .idea/
+
+scripts/addresses.json
